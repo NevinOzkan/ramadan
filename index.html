@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hoş Geldin Ramazan</title>
+  <!-- Google Fonts - Playfair Display -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ===== CSS Variables ===== */
+    :root {
+      --gold: #D4AF37;
+      --white: #ffffff;
+      --overlay-bg: linear-gradient(180deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+    }
+
+    /* ===== Reset & Base ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Playfair Display', Georgia, serif;
+    }
+
+    /* ===== Overlay Container ===== */
+    .ramadan-overlay {
+      position: fixed;
+      inset: 0;
+      background: var(--overlay-bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      opacity: 0;
+      transition: opacity 0.8s ease-out;
+    }
+
+    .ramadan-overlay.visible {
+      opacity: 1;
+    }
+
+    .ramadan-overlay.fade-out {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* ===== Half Moon (CSS) ===== */
+    .moon {
+      position: absolute;
+      top: 8%;
+      right: 12%;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      box-shadow: inset -15px -5px 0 0 rgba(255, 255, 255, 0.25);
+    }
+
+    @media (max-width: 768px) {
+      .moon {
+        top: 5%;
+        right: 8%;
+        width: 40px;
+        height: 40px;
+        box-shadow: inset -10px -3px 0 0 rgba(255, 255, 255, 0.25);
+      }
+    }
+
+    /* ===== Stars ===== */
+    .stars {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 50%;
+      animation: twinkle 2s ease-in-out infinite;
+    }
+
+    /* Random star positions - 15 stars */
+    .star:nth-child(1) { top: 12%; left: 8%; animation-delay: 0s; }
+    .star:nth-child(2) { top: 18%; left: 25%; animation-delay: 0.3s; }
+    .star:nth-child(3) { top: 8%; left: 45%; animation-delay: 0.6s; }
+    .star:nth-child(4) { top: 22%; left: 70%; animation-delay: 0.2s; }
+    .star:nth-child(5) { top: 15%; left: 88%; animation-delay: 0.8s; }
+    .star:nth-child(6) { top: 35%; left: 15%; animation-delay: 0.5s; }
+    .star:nth-child(7) { top: 42%; left: 55%; animation-delay: 0.1s; }
+    .star:nth-child(8) { top: 38%; left: 82%; animation-delay: 0.7s; }
+    .star:nth-child(9) { top: 55%; left: 12%; animation-delay: 0.4s; }
+    .star:nth-child(10) { top: 62%; left: 38%; animation-delay: 0.9s; }
+    .star:nth-child(11) { top: 58%; left: 65%; animation-delay: 0.2s; }
+    .star:nth-child(12) { top: 72%; left: 22%; animation-delay: 0.6s; }
+    .star:nth-child(13) { top: 78%; left: 50%; animation-delay: 0.3s; }
+    .star:nth-child(14) { top: 85%; left: 75%; animation-delay: 0.5s; }
+    .star:nth-child(15) { top: 92%; left: 35%; animation-delay: 0.1s; }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    /* ===== Mosque Container with Glassmorphism ===== */
+    .mosque-wrapper {
+      position: absolute;
+      bottom: 15%;
+      left: 50%;
+      transform: translateX(-50%) scale(0.9);
+      filter: blur(0);
+      opacity: 0;
+      animation: mosque-appear 1.2s ease-out 0.3s forwards;
+      z-index: 1;
+    }
+
+    @keyframes mosque-appear {
+      to {
+        opacity: 1;
+        transform: translateX(-50%) scale(1);
+      }
+    }
+
+    .mosque-glow {
+      position: absolute;
+      bottom: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120%;
+      height: 80px;
+      background: radial-gradient(ellipse at center, rgba(212, 175, 55, 0.15) 0%, transparent 70%);
+      filter: blur(20px);
+      pointer-events: none;
+    }
+
+    .mosque-svg {
+      width: min(320px, 85vw);
+      height: auto;
+      filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.2));
+    }
+
+    @media (max-width: 768px) {
+      .mosque-wrapper {
+        bottom: 12%;
+      }
+      .mosque-svg {
+        width: min(260px, 80vw);
+      }
+    }
+
+    /* ===== Text Content ===== */
+    .content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 0 24px;
+      max-width: 100%;
+    }
+
+    .title {
+      font-size: clamp(2rem, 8vw, 4.5rem);
+      font-weight: 700;
+      color: var(--gold);
+      text-shadow: 0 0 30px rgba(212, 175, 55, 0.5), 0 0 60px rgba(212, 175, 55, 0.3);
+      margin-bottom: 12px;
+      opacity: 0;
+      transform: translateY(-40px);
+      animation: title-slide 1s ease-out 0.5s forwards;
+      line-height: 1.2;
+    }
+
+    @keyframes title-slide {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .subtitle {
+      font-size: clamp(1rem, 3.5vw, 1.5rem);
+      font-weight: 600;
+      color: var(--white);
+      letter-spacing: 0.2em;
+      opacity: 0;
+      animation: subtitle-fade 0.8s ease-out 1s forwards;
+      margin-bottom: 48px;
+    }
+
+    @keyframes subtitle-fade {
+      to { opacity: 1; }
+    }
+
+    /* ===== Continue Button ===== */
+    .btn-continue {
+      padding: 14px 40px;
+      font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+      font-family: 'Playfair Display', Georgia, serif;
+      font-weight: 600;
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      letter-spacing: 0.1em;
+      opacity: 0;
+      animation: btn-fade 0.6s ease-out 1.2s forwards;
+    }
+
+    .btn-continue:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-continue:active {
+      transform: scale(0.98);
+    }
+
+    @keyframes btn-fade {
+      to { opacity: 1; }
+    }
+
+    /* ===== Ana Sayfa İçeriği (Hadis Bölümü) ===== */
+    #mainContent {
+      background: var(--overlay-bg);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      opacity: 0;
+      animation: content-fade-in 0.8s ease-out forwards;
+    }
+
+    #mainContent.visible {
+      opacity: 1;
+    }
+
+    @keyframes content-fade-in {
+      to { opacity: 1; }
+    }
+
+    .hadith-card {
+      max-width: 560px;
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      padding: 2.5rem;
+      text-align: center;
+    }
+
+    .hadith-label {
+      font-size: 0.85rem;
+      letter-spacing: 0.25em;
+      color: var(--gold);
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+    }
+
+    .hadith-text {
+      font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+      line-height: 1.8;
+      color: rgba(255, 255, 255, 0.95);
+      font-style: italic;
+      margin-bottom: 1.5rem;
+    }
+
+    .hadith-reference {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.6);
+    }
+  </style>
+</head>
+<body>
+  <!-- Ramazan Karşılama Overlay -->
+  <div class="ramadan-overlay" id="ramadanOverlay">
+    <!-- Yarım Ay -->
+    <div class="moon" aria-hidden="true"></div>
+
+    <!-- Yıldızlar -->
+    <div class="stars" aria-hidden="true">
+      <span class="star"></span>
+      <span class="star"></span>
+      <span class="star"></span>
+      <span class="star"></span>
+      <span class="star"></span>
+      <span class="star"></span>
+      <span class="star"></span>
+      <span class="star"></span>
+      <span class="star"></span>
+      <span class="star"></span>
+      <span class="star"></span>
+      <span class="star"></span>
+      <span class="star"></span>
+      <span class="star"></span>
+      <span class="star"></span>
+    </div>
+
+    <!-- Cami Silüeti (Minimal çizgi stili SVG) -->
+    <div class="mosque-wrapper">
+      <div class="mosque-glow"></div>
+      <svg class="mosque-svg" viewBox="0 0 240 140" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <!-- Ana merkezi kubbe -->
+        <path d="M95 50 Q120 5 145 50" stroke="rgba(255,255,255,0.45)" stroke-width="1.5" fill="none"/>
+        <!-- Sol küçük kubbe -->
+        <path d="M55 45 Q70 35 85 45" stroke="rgba(255,255,255,0.35)" stroke-width="1.2" fill="none"/>
+        <!-- Sağ küçük kubbe -->
+        <path d="M155 45 Q170 35 185 45" stroke="rgba(255,255,255,0.35)" stroke-width="1.2" fill="none"/>
+        <!-- Sol minare -->
+        <line x1="35" y1="140" x2="35" y2="55" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+        <circle cx="35" cy="50" r="4" stroke="rgba(255,255,255,0.4)" stroke-width="1" fill="none"/>
+        <!-- Sağ minare -->
+        <line x1="205" y1="140" x2="205" y2="55" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+        <circle cx="205" cy="50" r="4" stroke="rgba(255,255,255,0.4)" stroke-width="1" fill="none"/>
+        <!-- Ana gövde - üç kemerli cephe -->
+        <path d="M15 140 L15 85 Q50 65 85 85 L85 140" stroke="rgba(255,255,255,0.4)" stroke-width="1.2" fill="none"/>
+        <path d="M85 140 L85 85 Q120 65 155 85 L155 140" stroke="rgba(255,255,255,0.45)" stroke-width="1.2" fill="none"/>
+        <path d="M155 140 L155 85 Q190 65 225 85 L225 140" stroke="rgba(255,255,255,0.4)" stroke-width="1.2" fill="none"/>
+        <!-- Taban -->
+        <line x1="10" y1="140" x2="230" y2="140" stroke="rgba(255,255,255,0.35)" stroke-width="1"/>
+      </svg>
+    </div>
+
+    <!-- Yazı Alanı -->
+    <div class="content">
+      <h1 class="title">Hoş Geldin Ramazan</h1>
+      <p class="subtitle">11 Ayın Sultanı</p>
+      <button class="btn-continue" id="btnContinue" type="button">Devam Et</button>
+    </div>
+  </div>
+
+  <!-- Ana sayfa içeriği (overlay kapandıktan sonra görünür) -->
+  <main id="mainContent" style="display: none;">
+    <div class="hadith-card">
+      <p class="hadith-label">Hadis-i Şerif</p>
+      <blockquote class="hadith-text">
+        "Ramazan ayı girdiğinde cennet kapıları açılır, cehennem kapıları kapanır ve şeytanlar zincire vurulur."
+      </blockquote>
+      <p class="hadith-reference">— Buhârî, Savm 5; Müslim, Sıyâm 1</p>
+    </div>
+  </main>
+
+  <script>
+    (function() {
+      'use strict';
+
+      const overlay = document.getElementById('ramadanOverlay');
+      const btnContinue = document.getElementById('btnContinue');
+      const mainContent = document.getElementById('mainContent');
+
+      // Sayfa yüklendiğinde overlay'i göster (fade-in)
+      function showOverlay() {
+        overlay.classList.add('visible');
+      }
+
+      // Overlay'i kapat (smooth fade-out)
+      function hideOverlay() {
+        overlay.classList.add('fade-out');
+        overlay.classList.remove('visible');
+
+        // Animasyon bittikten sonra main content'i göster
+        setTimeout(function() {
+          overlay.style.display = 'none';
+          mainContent.style.display = 'flex';
+          document.body.style.overflow = 'auto';
+        }, 800);
+      }
+
+      // Event listeners
+      if (btnContinue) {
+        btnContinue.addEventListener('click', hideOverlay);
+      }
+
+      // Sayfa yüklendiğinde overlay'i göster
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', showOverlay);
+      } else {
+        showOverlay();
+      }
+    })();
+  </script>
+</body>
+</html>
